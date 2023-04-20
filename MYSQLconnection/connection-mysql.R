@@ -5,7 +5,7 @@ con <-reactive({
                  user = 'root',
                  host = 'localhost',
                  port = 3306,
-                 dbname='IGOSynthetic',
+                 dbname='*****',
                  password = "***")
 
 
