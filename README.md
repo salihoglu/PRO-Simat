@@ -28,3 +28,5 @@ which you may find helpful to follow.
 
 https://github.com/salihoglu/PRO-Simat/blob/main/Case%20study%20tutorials.pdf
 https://github.com/salihoglu/PRO-Simat/blob/main/PRO-Simat_userManual.pdf
+
+This study has been under review in the Computational and Structural Biotechnology Journal
