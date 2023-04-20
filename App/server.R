@@ -176,12 +176,11 @@ shinyServer(function(input, output, session) {
         colnames(edges) <- c("from","Gene_1", "link","tax_from","organism_1","to","Gene_2", "tax_to","organism_2")
         
         nodevistb <- edges
-        print("1")
+        
         colnames(nodevistb) <- c("From_A","Gene_A", "Interaction_Type","Taxonomy_A","Organism_A","To_B","Gene_B", "Taxonomy_B","Organism_B")
         nodevistb <- nodevistb[,c(1,6,3,2,7,4,8,5,9)]
         v$edgevis <- as.data.frame(nodevistb)
         
-        print("2")
         Edges <- as.data.frame(edges$from)
         Edges$to <- edges$to
         Edges$link <- edges$link
@@ -193,7 +192,7 @@ shinyServer(function(input, output, session) {
         nodes1$group <- edges$organism_1
         nodes1$genes <- edges$Gene_1
         colnames(nodes1) <- c("id","tax","group","genes")
-        print("3")
+        
         nodes2 <- as.data.frame(Edges$to)
         nodes2$tax <- edges$tax_to
         nodes2$group <- edges$organism_2
@@ -266,7 +265,6 @@ shinyServer(function(input, output, session) {
         
         colnames(ledges) <- c("color", "label","arrows")
         
-        print(ledges)
         gene_lst <- reactiveVal(nodes)
         graph_data$nodes <- nodes
         graph_data$edges <- edges
@@ -462,7 +460,7 @@ shinyServer(function(input, output, session) {
         vis_node_list <- as.data.frame(graph_data$nodes)
         vis_node <- as.data.frame(vis_node_list$id)
         #colnames(vis_node) <- "Node List"
-        print(vis_node)
+        
         v$updateDat <- vis_node
         return(vis_node)
       })
@@ -497,7 +495,7 @@ shinyServer(function(input, output, session) {
               INNER JOIN IGOSynthetic.GOInfo ON IGOSynthetic.UniProtKB2GO.GOInfo_ID = IGOSynthetic.GOInfo.GO_term
               WHERE IGOSynthetic.UniProtKB2GO.GeneInfo_ID = '",input$current_node_selection,"';")
         
-        #print(query)
+        
         qmain <- dbSendQuery(con(), query)
         
         go_info <- print(dbFetch(qmain, n=-1))
@@ -827,8 +825,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
   
   output$whichosen <-  DT::renderDataTable(server=FALSE,{
     if (input$chosen_data == "user_csv" && !is.null(reactives$userData)) {
-      print("print uploaded")
-      print(reactives$userData)
+      
       DT::datatable(reactives$userData,
                     extensions = c('Responsive','Scroller'), 
                     options = list(
@@ -977,8 +974,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
           
           
           ids <- as.data.frame(ids)
-          print("ids")
-          print(ids)
+          
           colnames(ids) <- c("geneSymbol","entrezid")
           UserGenes <- merge(ids, dForConv, by="geneSymbol")
           
@@ -1001,7 +997,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
           geneSig <- na.omit(geneSig)
           #geneSig <- names(geneSig)[abs(geneSig) > input$logFCut]
           geneSig <- geneSig[abs(geneSig) > input$logFCut]
-          print(geneSig)
+          
           userSigDF$SiGenesList <- names(geneSig)
           userSigDF$SiGeneListFC <- geneSig
          
@@ -1009,12 +1005,12 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
           
           if (input$GO_species == "org.Sc.sgd.db") {
             readableStat <- "FALSE"
-            print(readableStat)
+           
           }
           
           else{
             readableStat <- "TRUE"
-            print(readableStat)
+            
           }
         }
         
@@ -1078,12 +1074,12 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
           
           if (input$GO_species == "org.Sc.sgd.db") {
             readableStat <- "FALSE"
-            print(readableStat)
+            
           }
           
           else{
             readableStat <- "TRUE"
-            print(readableStat)
+           
           }
         }
 ################################################################################
@@ -1091,8 +1087,6 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
         
         else{
           
-          print(input$GO_species)
-          print(input$KEGG_species)
           clean_data <- v$for_symbol
           genes_uniprot <- v$updateDat
           colnames(genes_uniprot) <- "id"
@@ -1110,12 +1104,12 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
             ids <- bitr(genes_uniprot$id, fromType="UNIPROT", toType=c("ENTREZID","SYMBOL"), OrgDb="org.Hs.eg.db")
             
             readableStat <- "TRUE"
-            print(readableStat)
+            
             PDAAD <- read.csv("PDAAD_Gepia2.csv")
             selected_PDAAD <- merge(PDAAD,ids,by="SYMBOL")
             
             if(nrow(selected_PDAAD) <1){
-              print(ids)
+              
               geneSig <-ids$ENTREZID
               names(geneSig) <- ids$ENTREZID
               
@@ -1148,14 +1142,14 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
             
             ids <- bitr(genes_symbol, fromType="SYMBOL", toType=c("ENTREZID"), OrgDb= input$GO_species)
             readableStat <- "TRUE"
-            print(readableStat)
+            
             
           }
           
           if(input$GO_species != "org.Hs.eg.db" && input$GO_species != "org.At.tair.db" && input$GO_species != "org.EcK12.eg.db" && input$GO_species != "org.EcSakai.eg.db" ){
             ids <- bitr(genes_uniprot, fromType="UNIPROT", toType=c("ENTREZID"), OrgDb=input$GO_species)
             readableStat <- "TRUE"
-            print(readableStat)
+           
             
           }
           
@@ -1167,10 +1161,9 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
           
           userSigDF$SiGenesList <- genes$gene_name
           userSigDF$SiGenesListFC <- genes$gene_name
-          print(userSigDF$SiGenesListFC)
+         
         }
         
-        print(readableStat)
         Ex <- readableStat
         
         
@@ -1757,11 +1750,10 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
       }
       
       else{
-        print(userSigDF$SiGenesList)
+        
         id_cnvrt<-bitr_kegg(userSigDF$SiGenesList, fromType='ncbi-geneid', toType='kegg', organism = input$KEGG_species)
         userSigDF$SiGenesList <- id_cnvrt$kegg
-        print("id_cnvrt")
-        print(id_cnvrt)
+       
         ekk <- enrichKEGG(gene         = userSigDF$SiGenesList,
                           organism     = input$KEGG_species,
                           minGSSize = 1,
@@ -1834,7 +1826,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
       observeEvent(input$searchButton > 0,{
         if(input$searchButton > 0){
           isolate({
-            print(input$searchText)
+            
             browseKEGG(ekk, input$searchText)
           })
         }
@@ -1859,7 +1851,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
           
           png(file, units="in", width=19, height=7, res=300)
           
-          print(download_plots$images)
+          
           dev.off()
         } 
       )
@@ -1977,7 +1969,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
     }
     else if(input$choseJimena == "exampleJim") {
       test_file <- read.table("testJimena.txt",header = TRUE)
-      print(test_file)
+      
       write.table(test_file, "input.txt",row.names = FALSE,quote=FALSE)
       DT::datatable(test_file,
                     extensions = c('Responsive','Scroller'), 
@@ -2027,7 +2019,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
       system(paste("java -classpath jimena-app/jimena.jar:jimena-app/  App ", GRAPHML_PATH, sep=" "))
       jimena_output <- read.csv("jimena_time_series_data.csv")
       jimena_output_long <- melt(jimena_output, id.vars = "time")   
-      print("finished jimena long")
+     
       jimenaout$data <-jimena_output
       
       accumulate_by <- function(dat, var) {
@@ -2040,7 +2032,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
       }
       
       fig <- jimena_output_long %>% accumulate_by(~time)
-      print("fig is okay!")
+     
       
       jimena_time_series <- 
         ##################### works for without animation ######################################
@@ -2099,8 +2091,6 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
       Snode <- as.data.frame(colnames(add_per$data))
       squad_nodes$data <- Snode[-1,]
       
-      print(remain_per$data_name)
-      
       
       write.table(add_per$data, file = paste0("for_SQUADD/Jimena_output/Index_", remain_per$data_name,".txt"), sep="\t", row.names=FALSE,col.names=FALSE)
       
@@ -2151,8 +2141,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
     r <- all_node_[which(all_node_$Nodes==input$inVar2),]
     remain_parameter<- r
     remain_per$data_name <- remain_parameter$Nodes
-    print("writing node index")
-    print(r$NodeIndex)
+   
     add_per$NodeIndex <- r$NodeIndex
     add_parameter <- rbind(data.frame(    Index = 0,
                                           Nodes = add_per$NodeIndex,
@@ -2172,8 +2161,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
   
   observeEvent(input$remove_per, {
     t = daf()
-    print(t)
-    print(nrow(t))
+   
     
     if (!is.null(input$shiny_table_rows_selected)) {
       t <- t[-as.numeric(input$shiny_table_rows_selected),]
@@ -2191,7 +2179,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
     
     if (nrow(last_remain_info)>0){
       
-      print(last_remain_info)
+     
       merged_part <- merge(last_remain_info, remain, by= "Nodes")
       
       
@@ -2205,7 +2193,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
       remain_parameter <- distinct(remain_parameter)
       colnames(remain_parameter) <- c(0,0.05,10,1,0.1,0.5)
       
-      print(remain_parameter)
+     
       csv_fname = "jimena-app/ParameterInputs.csv"
       write.table(remain_parameter, file = csv_fname, sep = ",",
                   append = FALSE, quote = FALSE,
@@ -2221,7 +2209,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
                                                E = 0.1,
                                                G = 0.5))
       
-      print(remain_parameter)
+      
       csv_fname = "jimena-app/ParameterInputs.csv"
       write.table(remain_parameter, file = csv_fname, sep = ",",
                   append = FALSE, quote = FALSE,
@@ -2305,8 +2293,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
   squad_legend <- reactive({
     squadd_node_list <- as.data.frame(colnames(add_per$data))
     squadd_node_list <- squadd_node_list[-1,]
-    print(squadd_node_list)
-    
+   
     return(squadd_node_list)
   })
   output$squad_node <- renderUI({
@@ -2325,7 +2312,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
                                             E = 0.1,
                                             G = 0.5))
     
-    print(clean_parameter)
+   
     csv_fname = "jimena-app/ParameterInputs.csv"
     write.table(clean_parameter, file = csv_fname, sep = ",",
                 append = FALSE, quote = FALSE,
@@ -2420,13 +2407,13 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
   
   
   observeEvent(input$pngData, ignoreInit=TRUE, {
-    print("received pngData")
+   
     png.parsed <- fromJSON(input$pngData)
     substr(png.parsed, 1, 30) 
     nchar(png.parsed)  
     png.parsed.headless <- substr(png.parsed, 23, nchar(png.parsed)) 
     png.parsed.binary <- base64decode(png.parsed.headless)
-    print("writing png to network.png")
+   
     conn <- file("network.png", "wb")
     writeBin(png.parsed.binary, conn)
     close(conn)
@@ -2494,7 +2481,7 @@ Thus, it is graphed how the genes you selected vary in different perturbation re
                                             E = 0.1,
                                             G = 0.5))
     
-    print(clean_parameter)
+    
     csv_fname = "jimena-app/ParameterInputs.csv"
     write.table(clean_parameter, file = csv_fname, sep = ",",
                 append = FALSE, quote = FALSE,
