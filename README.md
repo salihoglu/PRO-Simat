@@ -21,7 +21,7 @@ Multilevel communication between components is critical for efficient network sw
 as demonstrated by a general census on prokaryotic and eukaryotic networks and comparing 
 design with synthetic networks using PRO-Simat. 
 
-The tool is available at [https://prosimat.heinzelab.de/](https://prosimat.bioinfo-wuerz.eu/) as a web-based query server. 
+The tool is available at (https://prosimat.bioinfo-wuerz.eu/) as a web-based query server. 
 
 Please find below the resources for the use of PRO-Simat and CaseStudy, 
 which you may find helpful to follow. 
